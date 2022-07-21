@@ -25,11 +25,11 @@ read OS_USER
 if [[ "$OS_USER" == "quit"  ]]
         then
              echo "quit detected"
-                	 break
-        	fi
+                 break
+        fi
 echo "write password for user $OS_USER"
 read -s OS_PWD
-creds_array+=("$OS_USER;OS_PWD")
+creds_array+=("$OS_USER;$OS_PWD")
 done
 
 
@@ -38,7 +38,7 @@ echo "--- Install powershell section ---"
 
 if grep packages.microsoft.com /etc/apt/sources.list /etc/apt/sources.list.d/*
 then
-	echo "MS repository already declared" 
+echo "MS repository already declared" 
 else
 curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/microsoft.list
