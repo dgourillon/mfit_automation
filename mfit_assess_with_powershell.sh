@@ -46,6 +46,7 @@ sudo apt-get update
 sudo apt-get install -y powershell
 fi
 
+echo "--- Assessment starting ---"
 cat <<EOF >get_vm_ids.ps1
 Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force
 Connect-VIServer -Server 172.16.10.2 -User 'administrator@psolab.local' -Password 'ps0Lab!admin' -Force
@@ -57,12 +58,12 @@ EOF
 
 for current_vm_id in $(pwsh -File get_vm_ids.ps1 | grep 'vm-' | sed 's/^.*VirtualMachine-//g'); do
 
-  echo "- collecting data for the VM Id $current_vm_id -------"
+  echo "---- collecting data for the VM Id $current_vm_id -------"
   for current_credential in "${creds_array[@]}";
   do
     CURRENT_OS_USER=$(echo $current_credential | awk -F ';' '{print $1}')
     CURRENT_OS_PWD=$(echo $current_credential | awk -F ';' '{print $2}')
-    echo "---- Using user $CURRENT_OS_USER ---------------"
+    echo "--------- Using user $CURRENT_OS_USER ---------------"
     ./mfit discover vsphere guest $current_vm_id --url https://$VSPHERE_URL -u $VSPHERE_USER -p $VSPHERE_PWD -i --vm-user $CURRENT_OS_USER --vm-password $CURRENT_OS_PWD
   done
 
